@@ -156,3 +156,9 @@ def maxList[T <% Ordered[T]](elements: List[T]): T = elements match {
         if (x > maxRest) x           // orderer(x) is implicit
         else maxRest
 }
+
+// To be more precise, one implicit conversion is more specific than another if one of the following applies:
+// • The argument type of the former is a subtype of the latter’s.
+// • Both conversions are methods, and the enclosing class of the former extends the enclosing class of the latter.
+
+// The -Xprint:typer option to the compiler is useful for this.
