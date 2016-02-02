@@ -41,6 +41,118 @@ implicit def doubleToInt(x:Double) = x.toInt
 
 val i:Int = 3.4
 
+case class MyWrapper(name:String){
+	def doSomething() = println(s"$name did something")
+}
+
+val wr = MyWrapper("wrap")
+
+implicit class WrapperImprovements(s: MyWrapper) {
+    def didSomething() = println("did")
+}
+
+// Restrictions
+// ImplicRestrictions
+// Implicit classes have the following restrictions:
+
+// 1. They must be defined inside of another trait/class/object.
 
 
+// 2. They may only take one non-implicit argument in their constructor.
+
+
+// 3. There may not be any method, member or object in scope with the same name as the implicit class.it classes have the following restrictions:
+
+wr.doSomething()
+
+wr.didSomething()
+
+ object Predef1 {
+          class ArrowAssoc(x: Int) {
+            def -+ (y: Int): Tuple2[Int, Int] = Tuple2(x, y)
+          }
+          implicit def any2ArrowAssoc(x: Int): ArrowAssoc =
+            new ArrowAssoc(x)
+}
+
+import Predef1._
+
+val a = 10 -+ 10
+
+println(a)
+
+wr.doSomething()
+
+wr.didSomething()
+
+// type Param = String
+
+// implicit val pi:Param = "31337"
+implicit val pInt = 31337
+
+case class Worker(implicit par:Int) {
+	def doSomething() = println(par)
+	def greet(implicit a:String) = println(s"got an implicit value here, equal to $a")
+}
+
+
+
+val fa = new Worker
+
+
+fa.doSomething()
+fa.greet
+
+class PreferredPrompt(val preference: String)
+      class PreferredDrink(val preference: String)
+      object Greeter {
+        def greet(name: String)(implicit prompt: PreferredPrompt,
+            drink: PreferredDrink) {
+          println("Welcome, "+ name +". The system is ready.")
+          print("But while you work, ")
+          println("why not enjoy a cup of "+ drink.preference +"?")
+          println(prompt.preference)
+		} 
+}
+      object JoesPrefs {
+        implicit val prompt = new PreferredPrompt("Yes, master> ")
+        implicit val drink = new PreferredDrink("tea")
+	  }
+
+import JoesPrefs._
+
+Greeter.greet("Joe")(prompt, drink)
+Greeter.greet("Joe")
+
+def maxListImpParm[T](elements: List[T])
+              (implicit orderer: T => Ordered[T]): T =
+          elements match {
+            case List() =>
+              throw new IllegalArgumentException("empty list!")
+            case List(x) => x
+            case x :: rest =>
+              // val maxRest = maxListImpParm(rest)(orderer)
+               val maxRest = maxListImpParm(rest)
+              // if (orderer(x) > maxRest) x
+              if (x > maxRest) x
+              else maxRest
+}
+
+println(maxListImpParm(List(1,5,10,3)))
+
+println(maxListImpParm(List(1.5, 5.2, 10.7, 3.14159)))
+
+println(maxListImpParm(List("one", "two", "three")))
+
+// A style rule for implicit parameters As a style rule, it is best to use a custom named type in the types of implicit parameters.
 // println(doSomething(5)) 
+
+def maxList[T <% Ordered[T]](elements: List[T]): T = elements match {
+      case List() =>
+        throw new IllegalArgumentException("empty list!")
+      case List(x) => x
+      case x :: rest =>
+        val maxRest = maxList(rest)  // (orderer) is implicit
+        if (x > maxRest) x           // orderer(x) is implicit
+        else maxRest
+}
