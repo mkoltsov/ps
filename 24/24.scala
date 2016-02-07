@@ -145,3 +145,5 @@ Map('a' -> 7, 'b' -> 0)
 // A set of three animals
 // A hash set of the same animals
 // A map from characters to integers
+
+import collection.JavaConversions._
