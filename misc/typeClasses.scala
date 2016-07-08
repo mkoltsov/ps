@@ -3,6 +3,7 @@ import java.io.{File, FileInputStream,FileOutputStream,BufferedInputStream,Buffe
 /**
  * Defines an interface for things that are like files for our synchronization code.
  */
+ 
 trait FileLike[T] {
   def name(file : T) : String
   def isDirectory(file : T) : Boolean
